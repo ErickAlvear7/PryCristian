@@ -1,6 +1,6 @@
 <?php  
 
-require_once 'Views/Content/menu.php';
+require_once './Content/menu.php';
 
 ?>
 
@@ -8,4 +8,4 @@ require_once 'Views/Content/menu.php';
 
 
 
-<?php  require_once 'Views/Content/footer.php';?>
+<?php  require_once './Content/footer.php';?>
