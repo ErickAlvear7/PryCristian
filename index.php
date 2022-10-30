@@ -1,6 +1,6 @@
 
 
-<?php  require_once 'Views/Content/menu.php';?>
+<?php  require_once 'Content/menu.php';?>
 
         <div class="container-fluid">
 
@@ -243,4 +243,4 @@
         </div>
         <!-- /.container-fluid -->
 
-        <?php  require_once 'Views/Content/footer.php';?>
+        <?php  require_once 'Content/footer.php';?>
