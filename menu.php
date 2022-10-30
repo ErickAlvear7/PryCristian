@@ -34,7 +34,7 @@
         </a>
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="consultas.php">Arbol Genealogico</a>
+                <a class="collapse-item" href="consultas">Arbol Genealogico</a>
             </div>
         </div>
     </li>
