@@ -75,13 +75,38 @@
 
        //DIRECCION-TELEFONOS
 
-       $xSQL = "SELECT DIR.DIRECCION AS Direccion, (SELECT TID.DESCRIPCION AS TipoDirec FROM BDAPLICATIVO..TIPODIRECCION TID WHERE TID.CODIGO=DIR.TIPODIRECCION)";
+       $xSQL = "SELECT DIR.DIRECCION AS DireccionTel, (SELECT TID.DESCRIPCION FROM BDAPLICATIVO..TIPODIRECCION TID WHERE TID.CODIGO=DIR.TIPODIRECCION) AS TipoDirec ";
        $xSQL .= "FROM BDAPLICATIVO..DIRECCION DIR (NOLOCK) WHERE DIR.IDENTIFICACION='$xCedula'";
        $resultado = $con->prepare($xSQL);
        $resultado->execute();
        $dirTele = $resultado->fetchAll();
-       $dirtel =0;
+       $dirtel =1;
 
+
+       $xSQL = "SELECT TEL.CELULAR AS Telefono, TEL.NOMBRE AS Nombre, TEL.NOMBRE_PRO AS Localidad, Direccion = '', TipoTele = 'CELULAR' ";
+       $xSQL .= "FROM BDAPLICATIVO..CLARO TEL (NOLOCK) WHERE TEL.CEDULA= '$xCedula' UNION ";
+
+       $xSQL = "SELECT TEL.CELULAR AS Telefono, TEL.NOMBRES AS Nombre, TEL.CIUDAD_CANTON AS Localidad ";
+       $xSQL .= "FROM BDAPLICATIVO..CLARO_ACTUAL_2019 TEL (NOLOCK) WHERE TEL.IDENTIFICACION='$xCedula' UNION ";
+
+       $xSQL = "SELECT TEL.TELEFONO AS Telefono, TEL.NOMBRE AS Nombre, TEL.DIRECCION AS Direccion, TEL.LOCALIDAD AS Localidad ";
+       $xSQL .= "FROM BDAPLICATIVO..CNT TEL (NOLOCK) WHERE TEL.CEDULA= '$xCedula' UNION ";
+       $TipoTele = 'CNT';
+
+       $xSQL = "SELECT TEL.TELEFONO AS Telefono, TEL.NOMBRE AS Nombre, TEL.DIRECCION AS Direccion, TEL.LOCALIDAD AS Localidad ";
+       $xSQL .= "FROM BDAPLICATIVO..CNT_EDINA_ENE19 TEL (NOLOCK) WHERE TEL.CED_RUC= '$xCedula' UNION ";
+       
+       $xSQL = "SELECT TEL.NUMEROTELEFONO AS Telefono, (SELECT TID.DESCRIPCION FROM BDAPLICATIVO..TIPOTELEFONO TID WHERE TID.CODIGO=TEL.TIPOTELEFONO) AS TipoTele ";
+       $xSQL .= "FROM BDAPLICATIVO..TELEFONO TEL (NOLOCK) WHERE TEL.IDENTIFICACION= '$xCedula' ";
+       $resultado = $con->prepare($xSQL);
+       $resultado->execute();
+       $telefonos= $resultado->fetchAll();
+       $Nombre = '';
+	   $Direccion = '';
+	   $Localidad = '';
+
+       
+      
     }
 
   
@@ -145,7 +170,7 @@
                         <h6 class="m-0 font-weight-bold text-primary">Instituto Ecuartoriano Seguridad Social:</h6>
                     </div>
                     <div class="table-responsive">
-                        <table class="table table-bordered" style="font-size: 12px; background-color: #D6EBF5 ;">
+                        <table class="table table-bordered table-striped" style="font-size: 12px; background-color: #D6EBF5 ;">
                             <thead>
                             <tr>
                                 <th style="color: #284DF2;">RUC</th>
@@ -190,15 +215,15 @@
                         <h6 class="m-0 font-weight-bold text-primary">Datos Registro Civil:</h6>
                     </div>
                     <div class="table-responsive"> 
-                        <table class="table table-bordered" style="font-size: 12px; background-color: #D6EBF5 ;">
+                        <table class="table table-bordered table-striped" style="font-size: 12px; background-color: #D6EBF5 ;">
                             <thead>
                             <tr>
-                                <th style="color: black;">Fech.Nacimiento</th>
-                                <th style="color: black;">Edad</th>
-                                <th style="color: black;">Est.Civil</th>
-                                <th style="color: black;">Tipo_Cedula</th>
-                                <th style="color: black;">Nivel_Estudios</th>
-                                <th style="color: black;">Profesion</th>
+                                <th style="color: #284DF2;">FECHA_NACIMIENTO</th>
+                                <th style="color: #284DF2;">EDAD</th>
+                                <th style="color: #284DF2;">ESTADO_CIVIL</th>
+                                <th style="color: #284DF2;">TIPO_CEDULA</th>
+                                <th style="color: #284DF2;">NIVEL_ESTUDIOS</th>
+                                <th style="color: #284DF2;">PROFESION</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -207,12 +232,12 @@
                                 foreach ($regCivil2019 as $dataReg) {
                             ?>  
                             <tr>
-                                <td><?php echo $dataReg['FechaNaci']; ?></td>
-                                <td><?php echo $dataReg['Edad']; ?></td>
-                                <td><?php echo $dataReg['EstadoCivil']; ?></td>
-                                <td><?php echo $dataReg['TipoCedula']; ?></td>
-                                <td><?php echo $dataReg['Nivel']; ?></td>
-                                <td><?php echo $dataReg['Profesion']; ?></td>
+                                <td style="color: black;"><?php echo $dataReg['FechaNaci']; ?></td>
+                                <td style="color: black;"><?php echo $dataReg['Edad']; ?></td>
+                                <td style="color: black;"><?php echo $dataReg['EstadoCivil']; ?></td>
+                                <td style="color: black;"><?php echo $dataReg['TipoCedula']; ?></td>
+                                <td style="color: black;"><?php echo $dataReg['Nivel']; ?></td>
+                                <td style="color: black;"><?php echo $dataReg['Profesion']; ?></td>
                             </tr>
                             <?php } 
                             }?>
@@ -222,15 +247,15 @@
                     </div>
                     <br/>
                     <div class="table-responsive"> 
-                        <table class="table table-bordered" style="font-size: 12px; background-color: #D6EBF5 ;">
+                        <table class="table table-bordered table-striped" style="font-size: 12px; background-color: #D6EBF5 ;">
                             <thead>
                             <tr>
-                                <th style="color: black;">Conyugue</th>
-                                <th style="color: black;">Cedula</th>
-                                <th style="color: black;">Padre</th>
-                                <th style="color: black;">Cedula</th>
-                                <th style="color: black;">Madre</th>
-                                <th style="color: black;">Cedula</th>
+                                <th style="color: #284DF2;">CONYUGUE</th>
+                                <th style="color: #284DF2;">CEDULA</th>
+                                <th style="color: #284DF2;">PADRE</th>
+                                <th style="color: #284DF2;">CEDULA</th>
+                                <th style="color: #284DF2;">MADRE</th>
+                                <th style="color: #284DF2;">CEDULA</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -239,12 +264,12 @@
                                 foreach($regCivil2019 as $dataReg) {
                             ?>  
                             <tr>
-                                <td><?php echo $dataReg['Conyuge']; ?></td>
-                                <td><?php echo $dataReg['Cedulacy']; ?></td>
-                                <td><?php echo $dataReg['Padre']; ?></td>
-                                <td><?php echo $dataReg['Cedulapa']; ?></td>
-                                <td><?php echo $dataReg['Madre']; ?></td>
-                                <td><?php echo $dataReg['Cedulama']; ?></td>
+                                <td style="color: black;"><?php echo $dataReg['Conyuge']; ?></td>
+                                <td style="color: black;"><?php echo $dataReg['Cedulacy']; ?></td>
+                                <td style="color: black;"><?php echo $dataReg['Padre']; ?></td>
+                                <td style="color: black;"><?php echo $dataReg['Cedulapa']; ?></td>
+                                <td style="color: black;"><?php echo $dataReg['Madre']; ?></td>
+                                <td style="color: black;"><?php echo $dataReg['Cedulama']; ?></td>
                             </tr>
                               <?php } 
                               }?>
@@ -263,17 +288,17 @@
                         <h6 class="m-0 font-weight-bold text-primary">Servicio Rentas Internas:</h6>
                     </div>
                     <div class="table-responsive"> 
-                        <table class="table table-bordered" style="font-size: 12px; background-color: #D6EBF5 ;">
+                        <table class="table table-bordered table-striped" style="font-size: 12px; background-color: #D6EBF5 ;">
                             <thead>
                             <tr>
-                                <th style="color: black;">Razon_Social</th>
-                                <th style="color: black;">Nombre_Comercial</th>
-                                <th style="color: black;">Contribuyente</th>
-                                <th style="color: black;">Clase</th>
-                                <th style="color: black;">Tipo</th>
-                                <th style="color: black;">Comercial</th>
-                                <th style="color: black;">Actividad</th>
-                                <th style="color: black;">Establecimiento</th>
+                                <th style="color: #284DF2;;">RAZON_SOCIAL</th>
+                                <th style="color: #284DF2;;">NOMBRE_COMERCIAL</th>
+                                <th style="color: #284DF2;;">CONTRIBUYENTES</th>
+                                <th style="color: #284DF2;;">CLASE</th>
+                                <th style="color: #284DF2;;">TIPO</th>
+                                <th style="color: #284DF2;;">COMERCIAL</th>
+                                <th style="color: #284DF2;;">ACTIVIDAD</th>
+                                <th style="color: #284DF2;;">ESTABLECIMIENTO</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -282,14 +307,14 @@
                                 foreach ($baseSRI as $dataSri) {
                             ?>  
                             <tr>
-                                <td><?php echo $dataSri['RazonSocial']; ?></td>
-                                <td><?php echo $dataSri['Nombre']; ?></td>
-                                <td><?php echo $dataSri['Contribuyente']; ?></td>
-                                <td><?php echo $dataSri['Clase']; ?></td>
-                                <td><?php echo $dataSri['Tipo']; ?></td>
-                                <td><?php echo $dataSri['Comercial']; ?></td>
-                                <td><?php echo $dataSri['Actividad']; ?></td>
-                                <td><?php echo $dataSri['Establecimiento']; ?></td>
+                                <td style="color: black;"><?php echo $dataSri['RazonSocial']; ?></td>
+                                <td style="color: black;"><?php echo $dataSri['Nombre']; ?></td>
+                                <td style="color: black;"><?php echo $dataSri['Contribuyente']; ?></td>
+                                <td style="color: black;"><?php echo $dataSri['Clase']; ?></td>
+                                <td style="color: black;"><?php echo $dataSri['Tipo']; ?></td>
+                                <td style="color: black;"><?php echo $dataSri['Comercial']; ?></td>
+                                <td style="color: black;"><?php echo $dataSri['Actividad']; ?></td>
+                                <td style="color: black;"><?php echo $dataSri['Establecimiento']; ?></td>
                             </tr>
                             <?php } 
                               }?>
@@ -298,15 +323,15 @@
                     </div>
                     <br/>
                     <div class="table-responsive"> 
-                        <table class="table table-bordered" style="font-size: 12px; background-color: #D6EBF5 ;">
+                        <table class="table table-bordered table-striped" style="font-size: 12px; background-color: #D6EBF5 ;">
                             <thead>
                             <tr>
-                                <th style="color: black;">Direccion</th>
-                                <th style="color: black;">Provincia</th>
-                                <th style="color: black;">Canton</th>
-                                <th style="color: black;">Parroquia</th>
-                                <th style="color: black;">Fecha_Inicio</th>
-                                <th style="color: black;">Fecha_Suspension</th>
+                                <th style="color: #284DF2;">DIRECIION</th>
+                                <th style="color: #284DF2;">PROVINCIA</th>
+                                <th style="color: #284DF2;">CANTON</th>
+                                <th style="color: #284DF2;">PARROQUIA</th>
+                                <th style="color: #284DF2;">FECHA_INICIO</th>
+                                <th style="color: #284DF2;">FECHA_SUSPENSION</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -315,12 +340,12 @@
                                 foreach ($baseSRI as $dataSri) {
                             ?>  
                             <tr>
-                                <td><?php echo $dataSri['Direccion']; ?></td>
-                                <td><?php echo $dataSri['Provincia']; ?></td>
-                                <td><?php echo $dataSri['Canton']; ?></td>
-                                <td><?php echo $dataSri['Parroquia']; ?></td>
-                                <td><?php echo $dataSri['FechaInicio']; ?></td>
-                                <td><?php echo $dataSri['FechaSuspension']; ?></td>
+                                <td style="color: black;"><?php echo $dataSri['Direccion']; ?></td>
+                                <td style="color: black;"><?php echo $dataSri['Provincia']; ?></td>
+                                <td style="color: black;"><?php echo $dataSri['Canton']; ?></td>
+                                <td style="color: black;"><?php echo $dataSri['Parroquia']; ?></td>
+                                <td style="color: black;"><?php echo $dataSri['FechaInicio']; ?></td>
+                                <td style="color: black;"><?php echo $dataSri['FechaSuspension']; ?></td>
                             </tr>
                             <?php } 
                               }?>
@@ -339,11 +364,11 @@
                         <h6 class="m-0 font-weight-bold text-primary">Direcciones:</h6>
                     </div>
                     <div class="table-responsive"> 
-                        <table class="table table-bordered" style="font-size: 12px; background-color: #D6EBF5 ;">
+                        <table class="table table-bordered table-striped" style="font-size: 12px; background-color: #D6EBF5 ;">
                             <thead>
                             <tr>
-                                <th style="color: black;">Direccion</th>
-                                <th style="color: black;">Tipo Direccion</th>
+                                <th style="color: #284DF2;">DIRECCION</th>
+                                <th style="color: #284DF2;">TIPO_DIRECCION</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -352,8 +377,8 @@
                                 foreach ($dirTele as $dataDirtel) {
                             ?>  
                             <tr>
-                                <td><?php echo $dataDirtel['Direccion']; ?></td>
-                                <td><?php echo $dataDirtel['TipoDirec']; ?></td>
+                                <td style="color: black;"><?php echo $dataDirtel['DireccionTel']; ?></td>
+                                <td style="color: black;"><?php echo $dataDirtel['TipoDirec']; ?></td>
                             </tr>
                             <?php } 
                               }?>
@@ -365,19 +390,19 @@
                         <h6 class="m-0 font-weight-bold text-primary">Telefonos:</h6>
                     </div>
                     <div class="table-responsive"> 
-                        <table class="table table-bordered" style="font-size: 12px; background-color: #D6EBF5 ;">
+                        <table class="table table-bordered table-striped" style="font-size: 12px; background-color: #D6EBF5 ;">
                             <thead>
                             <tr>
-                                <th style="color: black;">Telefono</th>
-                                <th style="color: black;">Tipo Telefono</th>
-                                <th style="color: black;">Nombre</th>
-                                <th style="color: black;">Direccion</th>
-                                <th style="color: black;">Localidad</th>
+                                <th style="color: #284DF2;">TELEFONO</th>
+                                <th style="color: #284DF2;">TIPO_TELEFONO</th>
+                                <th style="color: #284DF2;">NOMBRE</th>
+                                <th style="color: #284DF2;">DIRECCION</th>
+                                <th style="color: #284DF2;">LOCALIDAD</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr>
-                                <td>John</td>
+                                <td style="color: black;">John</td>
                                 <td>Doe</td>
                                 <td>john@example.com</td>
                             </tr>
@@ -396,18 +421,18 @@
                         <h6 class="m-0 font-weight-bold text-primary">Arbol:</h6>
                     </div>
                     <div class="table-responsive"> 
-                        <table class="table table-bordered" style="font-size: 12px; background-color: #D6EBF5 ;">
+                        <table class="table table-bordered table-striped" style="font-size: 12px; background-color: #D6EBF5 ;">
                             <thead>
                             <tr>
-                                <th style="color: black;">Cedula</th>
-                                <th style="color: black;">Nombres</th>
-                                <th style="color: black;">Parentesco</th>
-                                <th style="color: black;">Fecha_Fallece</th>
+                                <th style="color: #284DF2;">CEDULA</th>
+                                <th style="color: #284DF2;">NOMBRES</th>
+                                <th style="color: #284DF2;">PARENTESCO</th>
+                                <th style="color: #284DF2;">FECHA_FALLECE</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr>
-                                <td>John</td>
+                                <td style="color: #284DF2;">John</td>
                                 <td>Doe</td>
                             </tr>
                             </tbody>
