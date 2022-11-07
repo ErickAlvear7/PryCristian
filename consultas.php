@@ -13,6 +13,7 @@
     $ies =0;
     $sri =0;
     $dirtel =0;
+    $tel =0;
 
     if(isset($_POST['buscar']) and isset($_POST['cedula'])  )
     {
@@ -82,29 +83,20 @@
        $dirTele = $resultado->fetchAll();
        $dirtel =1;
 
-
        $xSQL = "SELECT TEL.CELULAR AS Telefono, TEL.NOMBRE AS Nombre, TEL.NOMBRE_PRO AS Localidad, Direccion = '', TipoTele = 'CELULAR' ";
        $xSQL .= "FROM BDAPLICATIVO..CLARO TEL (NOLOCK) WHERE TEL.CEDULA= '$xCedula' UNION ";
-
-       $xSQL = "SELECT TEL.CELULAR AS Telefono, TEL.NOMBRES AS Nombre, TEL.CIUDAD_CANTON AS Localidad ";
+       $xSQL = "SELECT TEL.CELULAR AS Telefono, TEL.NOMBRES AS Nombre, TEL.CIUDAD_CANTON AS Localidad, TipoTele = 'CELULAR', Direccion = '' ";
        $xSQL .= "FROM BDAPLICATIVO..CLARO_ACTUAL_2019 TEL (NOLOCK) WHERE TEL.IDENTIFICACION='$xCedula' UNION ";
-
-       $xSQL = "SELECT TEL.TELEFONO AS Telefono, TEL.NOMBRE AS Nombre, TEL.DIRECCION AS Direccion, TEL.LOCALIDAD AS Localidad ";
+       $xSQL = "SELECT TEL.TELEFONO AS Telefono, TEL.NOMBRE AS Nombre, TEL.DIRECCION AS Direccion, TEL.LOCALIDAD AS Localidad, TipoTele = 'CNT' ";
        $xSQL .= "FROM BDAPLICATIVO..CNT TEL (NOLOCK) WHERE TEL.CEDULA= '$xCedula' UNION ";
-       $TipoTele = 'CNT';
-
-       $xSQL = "SELECT TEL.TELEFONO AS Telefono, TEL.NOMBRE AS Nombre, TEL.DIRECCION AS Direccion, TEL.LOCALIDAD AS Localidad ";
+       $xSQL = "SELECT TEL.TELEFONO AS Telefono, TEL.NOMBRE AS Nombre, TEL.DIRECCION AS Direccion, TEL.LOCALIDAD AS Localidad, TipoTele = 'CNT' ";
        $xSQL .= "FROM BDAPLICATIVO..CNT_EDINA_ENE19 TEL (NOLOCK) WHERE TEL.CED_RUC= '$xCedula' UNION ";
-       
-       $xSQL = "SELECT TEL.NUMEROTELEFONO AS Telefono, (SELECT TID.DESCRIPCION FROM BDAPLICATIVO..TIPOTELEFONO TID WHERE TID.CODIGO=TEL.TIPOTELEFONO) AS TipoTele ";
+       $xSQL = "SELECT TEL.NUMEROTELEFONO AS Telefono, (SELECT TID.DESCRIPCION FROM BDAPLICATIVO..TIPOTELEFONO TID WHERE TID.CODIGO=TEL.TIPOTELEFONO) AS TipoTele, Nombre = '', Direccion = '', Localidad = '' ";
        $xSQL .= "FROM BDAPLICATIVO..TELEFONO TEL (NOLOCK) WHERE TEL.IDENTIFICACION= '$xCedula' ";
        $resultado = $con->prepare($xSQL);
        $resultado->execute();
        $telefonos= $resultado->fetchAll();
-       $Nombre = '';
-	   $Direccion = '';
-	   $Localidad = '';
-
+       $tel =1;
        
       
     }
@@ -401,11 +393,19 @@
                             </tr>
                             </thead>
                             <tbody>
+                            <?php
+                             if($tel==1){
+                                foreach ($telefonos as $dataTel) {
+                            ?>    
                             <tr>
-                                <td style="color: black;">John</td>
-                                <td>Doe</td>
-                                <td>john@example.com</td>
+                                <td style="color: black;"><?php echo $dataTel['Telefono']; ?></td>
+                                <td style="color: black;"><?php echo $dataTel['TipoTele']; ?></td>
+                                <td style="color: black;"><?php echo $dataTel['Nombre']; ?></td>
+                                <td style="color: black;"><?php echo $dataTel['Direccion']; ?></td>
+                                <td style="color: black;"><?php echo $dataTel['Localidad']; ?></td>
                             </tr>
+                            <?php } 
+                              }?>
                             </tbody>
                         </table>
                     </div>
