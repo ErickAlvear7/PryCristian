@@ -97,8 +97,15 @@
        $resultado->execute();
        $telefonos= $resultado->fetchAll();
        $tel =1;
-       
-      
+
+       //EMPRESA
+
+        $xSQL = "SELECT EMP.RUCEMPRESA AS Ruc, EMP.NOMBREEMPRESA AS Empresa WHERE EMP.IDENTIFICACION = '$xCedula' ";
+        $resultado = $con->prepare($xSQL);
+        $resultado->execute();
+        $empresa= $resultado->fetchAll();
+
+        
     }
 
   
@@ -443,7 +450,7 @@
         </div>
     </div>
     <div class="row">
-        <a href="../index" class="btn btn-sm btn-clean btn-icon" >
+        <a href="../menucontent/index" class="btn btn-sm btn-clean btn-icon" >
 			<i class="fa fa-reply fa-lg"></i>
         </a>    
     </div>
