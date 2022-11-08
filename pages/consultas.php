@@ -114,13 +114,13 @@
 ?>
 
 <div class="container-fluid">
-    <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" method="POST">
+    <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" method="POST" autocomplete="off">
         <div class="input-group">
             <input type="text" id="cedula" name="cedula" class="form-control bg-light border-0 small" placeholder="Buscar"
                 aria-label="Search" aria-describedby="basic-addon2" minlength="5" maxlength="10" onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" required>
                 <label id="cedulaP-error" class="error" for="cedulaP" style="display: none;"></label>
             <div class="input-group-append">
-                <button class="btn btn-primary" type="submit" name="buscar">
+                <button class="btn btn-primary" type="submit" name="buscar" autocomplete="off">
                     <i class="fas fa-search fa-sm"></i>
                 </button>
             </div>

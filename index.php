@@ -69,7 +69,7 @@
                                         </div>
                                         <br/>
                                         <div class="col">
-                                          <button type="submit" name="login" class="btn btn-primary btn-lg btn-block">LOGIN</button>
+                                          <button type="submit" name="login" class="btn btn-outline-primary btn-lg btn-block">LOGIN</button>
                                         </div>
                                     </form>
                                     <hr>
