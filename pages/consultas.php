@@ -100,7 +100,7 @@
 
        //EMPRESA
 
-        $xSQL = "SELECT EMP.RUCEMPRESA AS Ruc, EMP.NOMBREEMPRESA AS Empresa WHERE EMP.IDENTIFICACION = '$xCedula' ";
+        $xSQL = "SELECT EMP.RUCEMPRESA AS Ruc, EMP.NOMBREEMPRESA AS Empresa FROM BDAPLICATIVO..EMPRESA EMP WHERE EMP.IDENTIFICACION = '$xCedula' ";
         $resultado = $con->prepare($xSQL);
         $resultado->execute();
         $empresa= $resultado->fetchAll();
